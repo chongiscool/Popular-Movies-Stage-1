@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Popular-Movies-Stage-1</string>
+    <string name="movie_trailer">Trailer</string>
+    <string name="movie_overview">Hello, This is overview of movie!</string>
+    <string name="movie_review_user">Cake Wang</string>
+    <string name="movie_reviews_comment">This film is amazing, love it!</string>
 </resources>
