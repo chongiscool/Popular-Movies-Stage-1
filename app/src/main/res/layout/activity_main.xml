@@ -9,21 +9,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="chong.wecanteen.com.popular_movies_stage_1.MainActivity">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/container"
+    <fragment
+        tools:layout="@layout/fragment_main"
+        android:name="chong.wecanteen.com.popular_movies_stage_1.MainFragment"
+        android:id="@+id/main_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content" />
 
-        <GridView
-            android:id="@+id/movie_gridview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnWidth="90dp"
-            android:gravity="center"
-            android:horizontalSpacing="10dp"
-            android:numColumns="auto_fit"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp" />
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+
+    </FrameLayout>
 </RelativeLayout>

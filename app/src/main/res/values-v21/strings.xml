@@ -1,13 +1,5 @@
-<resources xmlns:xliff="http://schemas.android.com/tools">
-    <string name="app_name">Popular-Movies-Stage-1</string>
-
-    <!--for ListView -->
-    <string name="trailer_tv">Trailer</string>
-    <string name="overview_tv">Hello, This is overview of movie!</string>
-    <string name="review_user_tv">Cake Wang</string>
-    <string name="reviews_comment_tv">This film is amazing, love it!</string>
-
-    <string name="settings">Settings</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
     <string name="no_internet_connection">No internet connection</string>
     <string name="no_found_movie">No movie found</string>
     <string name="play_arrow_description">play arrow, you can click it playing a trailer of present movie</string>
@@ -16,5 +8,4 @@
     <string name="movie_date">Date: 2016-04-27</string>
     <string name="movie_rating">Rating: 6.9</string>
     <string name="movie_time">146 Min</string>
-
 </resources>
