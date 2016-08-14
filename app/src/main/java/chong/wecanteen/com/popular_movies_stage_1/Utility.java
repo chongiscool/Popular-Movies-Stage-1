@@ -15,7 +15,10 @@
  */
 package chong.wecanteen.com.popular_movies_stage_1;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -41,42 +44,49 @@ import chong.wecanteen.com.popular_movies_stage_1.dataset.VideosBean;
 
 /**
  * Created by Chong on 7/9/2016.
+ *
+ * This is a help class which have many static method and final static constant.
+ * In this application, another class can access these method for their:
+ * 1. build youtube and movie poster url
+ * 2. fetch Movie data for MainFragment
+ * 3. fetch Detail data, Trailer data and Reviews data for {@link DetailFragment}
  */
 public class Utility {
-    /**
-     * This Helper class aim to build four request url and their parse
-     */
 
     private static final String LOG_TAG = Utility.class.getSimpleName();
 
-    // for ImageAdapter
     // example like this: https://api.themoviedb.org/3/movie/550?api_key=XXXX
-    // https://api.themoviedb.org/3/movie/popular?api_key=XXXX
-    // https://api.themoviedb.org/3/movie/top_rated?api_key=XXXX
     public static final int MOVIE_SORT_POPULAR = 0;
     public static final int MOVIE_SORT_TOP_RATED = 1;
+    public static final int MOVIE_SORT_FAVORITE = 2;
     public static final String BASE_URL = "https://api.themoviedb.org/3/movie";
     public static final String MOVIE_POPULAR = "popular";
     public static final String MOVIE_TOP_RATED = "top_rated";
+    public static final String MOVIE_FAVORITE = "favorite";
+    public static final String API_KEY_PARAM = "api_key";
+    // TODO, for swipeRefreshLayout page plus one, but use it later.
+    public static final String PAGE_PARAM = "page";
 
-    // for movie poster
+    // For movie poster
     // example like this: http://image.tmdb.org/t/p/w185/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
     public static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p";
     public static final String IMAGE_RECOMMEND_SIZE185 = "w185";
-    public static final String IMAGE_SIZE92 = "w92";
-    public static final String IMAGE_SIZE154 = "w154";
-
-    public static final String API_KEY_PARAM = "api_key";
-    public static final String PAGE_PARAM = "page";
-
-    // for trailers and reviews
+    // For trailers and reviews
     // example like this: https://www.youtube.com/watch?v=dU1xS07N-FA
     public static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch";
-    public static final String YOUTUBE_KEY = "v";
+    public static final String YOUTUBE_KEY_PARAM = "v";
     public static final String VIDEOS = "videos";
     public static final String REVIEWS = "reviews";
 
-    // call the method, return a string of sort movie url with spec sort
+    // Get movie sort value from SharedPreferences
+    public static int getPreferredSortMovie(Context context) {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(context);
+        String sortString = sharedPreferences.getString(context.getString(R.string.sort), "0");
+        return Integer.parseInt(sortString);
+    }
+
+    // Call the method, return a string of sort movie url with spec sort
     // now, there are two sort: top_rated, popular.
     private static String buildURL(int sort, int page) {
         switch (sort) {
@@ -99,7 +109,7 @@ public class Utility {
         return null;
     }
 
-    // create URL for main fragment
+    // Create URL for main fragment
     private static URL createURL(String urlString) {
         URL url = null;
         try {
@@ -111,6 +121,14 @@ public class Utility {
         return url;
     }
 
+    /**
+     * Use {@link URL} open connection, and invoke extractFromStream
+     * method, get jsonResponse. This process might be consume more time, especially
+     * request for image and video stream, so better place this process to background thread.
+     * @param url From createURL method
+     * @return jsonResponse from web server
+     * @throws IOException
+     */
     private static String makeHttpResponse(URL url) throws IOException {
         String jsonResponse = "";
         if (url == null) {
@@ -147,6 +165,7 @@ public class Utility {
             e.printStackTrace();
 
         } finally {
+            // close stream and disconnect url
             if (inputStream != null) {
                 inputStream.close();
             }
@@ -176,7 +195,11 @@ public class Utility {
         return null;
     }
 
-    // parse jsonString, and store data to List
+    /***
+     * Parse jsonString, and store data to List
+     * @param jsonString downloaded after invoked makeHttpResponse method
+     * @return {@link List<Bean>}
+     */
     private static List<Bean> extractFeatureFromJson(String jsonString) {
         if (TextUtils.isEmpty(jsonString)) {
             return null;
@@ -187,6 +210,7 @@ public class Utility {
             JSONObject jsonObject = new JSONObject(jsonString);
 
             JSONArray jsonArray = jsonObject.getJSONArray("results");
+            // store total pages for page reference at the proccess of swipeRefreshLayout.
             Bean.total_pages = jsonObject.getInt("total_pages");
             // add this page to store Bean.ResultsBean
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -208,6 +232,15 @@ public class Utility {
         return beans;
     }
 
+    /***
+     * This method is public, by invoking buildURL, createURL,
+     * makeHttpResponse(which invoked extraFromStream at the internal), extractFeatureJson methods.
+     * Got a {@link List<Bean>}  for MainAdapter.
+     *
+     * @param sort: three type: top_rated, pop and favorite.
+     * @param page: require specific page.
+     * @return {@link List<Bean>}
+     */
     public static List<Bean> fetchMovieData(int sort, int page) {
         String urlString = buildURL(sort, page);
         URL url = createURL(urlString);
@@ -218,13 +251,12 @@ public class Utility {
             Log.e(LOG_TAG, "fetchMovieData: problem making the HTTP request.", e);
             e.printStackTrace();
         }
-        // Extract relevant fields from the JSON response and create a list of {@link Bean.ResultBean}s
+        // Extract relevant fields from the JSON response and got a List<Bean>
         List<Bean> beans = extractFeatureFromJson(jsonResponse);
         // return
         Log.i(LOG_TAG, "TEST: fetchMovieData() called... ");
         return beans;
     }
-
 
     // build reviews request url, so can fetch more movie comments
     private static String buildRequestCommentsURL(int id) {
@@ -256,14 +288,19 @@ public class Utility {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("results");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject element = jsonArray.getJSONObject(i);
-                String author = element.getString("author");
-                String content = element.getString("content");
-                String url = element.getString("url");
+            if (jsonArray != null && jsonArray.length() > 0) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject element = jsonArray.getJSONObject(i);
+                    String author = element.getString("author");
+                    String content = element.getString("content");
+                    String url = element.getString("url");
 
-                commentsBean = new CommentsBean(author, content, url);
-                commentsBeans.add(commentsBean);
+                    commentsBean = new CommentsBean(author, content, url);
+                    commentsBeans.add(commentsBean);
+                }
+            } else {
+                Log.e(LOG_TAG, "extractCommentFromJson: jsonArray have no element");
+                return null;
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -271,7 +308,7 @@ public class Utility {
         return commentsBeans;
     }
 
-    // fetch comments json data from web
+    // Fetch comments json data from web server
     public static List<CommentsBean> fetchCommentsJsonData(int id) {
         String urlString = buildRequestCommentsURL(id);
         URL url = createKindsOfURL(urlString);
@@ -283,12 +320,14 @@ public class Utility {
             e.printStackTrace();
         }
         List<CommentsBean> commentsBeans = extractCommentFromJson(jsonResponse);
-        Log.i(LOG_TAG, "TEST:fetchCommentsJsonData() called.. ");
+        if (commentsBeans == null) {
+            Log.i(LOG_TAG, "TEST:fetchCommentsJsonData() called commentsBean is null" );
+        }
         return commentsBeans;
     }
 
 
-    // build trailer request url, so can fetch more trailer videos
+    // Build trailer request url, so can fetch more trailer videos
     public static String buildRequestVideosURL(int id) {
         Uri uri = Uri.parse(BASE_URL).buildUpon()
                 .appendEncodedPath(Integer.toString(id))
@@ -298,8 +337,7 @@ public class Utility {
         return uri.toString();
     }
 
-    // extract data from json string, store it in a List<VideosBean.ResultBean>
-    // for recent usage, just store three variable, "key", "type", "name"
+    // Extract data from json string, store them in a List
     private static List<VideosBean> extractVideoFromJson(String jsonString) {
         if (TextUtils.isEmpty(jsonString)) {
             return null;
@@ -319,6 +357,7 @@ public class Utility {
                             element.getString("name"),
                             type
                     );
+                    // add element to this list object
                     videosBeans.add(videosBean);
                 }
             }
@@ -329,7 +368,7 @@ public class Utility {
         return videosBeans;
     }
 
-    // fetch json data for specified movie which contain some film trailers,
+    // Fetch json data for specified movie which contain some film trailers,
     // perform this method,
     public static List<VideosBean> fetchVideosJsonData(int id) {
         String urlString = buildRequestVideosURL(id);
@@ -348,7 +387,7 @@ public class Utility {
     }
 
 
-    // built details request url for detail fragment
+    // Build details request url for detail fragment
     private static String buildRequestDetailsURL(int id) {
         Uri uri = Uri.parse(BASE_URL).buildUpon()
                 .appendEncodedPath(Integer.toString(id))
@@ -357,9 +396,7 @@ public class Utility {
         return uri.toString();
     }
 
-    // extract data from json string, store it in a Detail class.
-    // for stage 1 usage, just store these six variable, "title", "runtime",
-    // "vote_average", "release_data", "poster_path", "overview".
+    // Extract data from json string and store it.
     private static DetailsBean extractDetailFromJson(String jsonString) {
         if (TextUtils.isEmpty(jsonString)) {
             return null;
@@ -380,7 +417,7 @@ public class Utility {
         return bean;
     }
 
-    // fetch json data for specified movie detail
+    // Fetch json data for specified movie detail
     public static DetailsBean fetchDetailJsonData(int id) {
         String urlString = buildRequestDetailsURL(id);
         URL url = createKindsOfURL(urlString);
@@ -395,8 +432,7 @@ public class Utility {
         return bean;
     }
 
-
-    // build image url, so can view directly in browser
+    // Build image url, so can view directly.
     public static String fetchImageURL(String image) {
         Uri uri = Uri.parse(IMAGE_BASE_URL).buildUpon()
                 .appendEncodedPath(IMAGE_RECOMMEND_SIZE185)
@@ -405,10 +441,10 @@ public class Utility {
         return uri.toString();
     }
 
-    // build youtube url, so can view directly in youtube
+    // Build youtube url, so can view directly.
     public static String fetchYoutubeURL(String video) {
         Uri uri = Uri.parse(YOUTUBE_BASE_URL).buildUpon()
-                .appendQueryParameter(YOUTUBE_KEY, video)
+                .appendQueryParameter(YOUTUBE_KEY_PARAM, video)
                 .build();
         return uri.toString();
     }

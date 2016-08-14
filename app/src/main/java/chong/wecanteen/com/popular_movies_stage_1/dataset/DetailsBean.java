@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package chong.wecanteen.com.popular_movies_stage_1.dataset;
 
 import android.os.Parcel;
@@ -5,18 +21,21 @@ import android.os.Parcelable;
 
 /**
  * Created by Chong on 8/5/2016.
+ *
+ * This class aim to store movie detail for usage of DetailFragment.
  */
 public class DetailsBean implements Parcelable {
 
-    private String backdrop_path;
-    private int id;
-    private String overview;
+    private String backdrop_path;  /** like poster_path, this is for backdrop image */
+    private int id;  /** movie id, for further requesting revews and trailers */
+    private String overview;  /** plot synopsis of specific movie */
     private double popularity;
+    /* poster path of specific movie, like:"/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg" */
     private String poster_path;
-    private String release_date;
-    private int runtime;
-    private String title;
-    private double vote_average;
+    private String release_date;  /** movie release date */
+    private int runtime;  /** movie duration */
+    private String title;  /** movie title */
+    private double vote_average;  /** vote average at one platform */
 
     public DetailsBean() {
     }

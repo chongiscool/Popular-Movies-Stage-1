@@ -8,4 +8,5 @@
     <string name="movie_date">Date: 2016-04-27</string>
     <string name="movie_rating">Rating: 6.9</string>
     <string name="movie_time">146 Min</string>
+    <string name="refresh_friendly_reminder">No real data updated, implement it later</string>
 </resources>

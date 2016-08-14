@@ -1,20 +1,31 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">Popular-Movies-Stage-1</string>
 
-    <!--for ListView -->
+    <!--MainActivity title-->
+    <string name="pop_movies">Pop Movies</string>
+    <string name="top_movies">Top Movies</string>
+
+    <!--Fake data for ListView -->
     <string name="trailer_tv">Trailer</string>
     <string name="overview_tv">Hello, This is overview of movie!</string>
     <string name="review_user_tv">Cake Wang</string>
     <string name="reviews_comment_tv">This film is amazing, love it!</string>
 
-    <string name="settings">Settings</string>
-    <string name="no_internet_connection">No internet connection</string>
-    <string name="no_found_movie">No movie found</string>
+    <!--Fake data for Details-->
     <string name="play_arrow_description">play arrow, you can click it playing a trailer of present movie</string>
     <string name="mark_as_favorite">Mark as favorite</string>
     <string name="movie_title">This is a moive title</string>
-    <string name="movie_date">Date: 2016-04-27</string>
+    <string name="movie_date">Date: 2016&#8211;04&#8211;27</string>
     <string name="movie_rating">Rating: 6.9</string>
     <string name="movie_time">146 Min</string>
+
+
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="no_found_movie">No movie found</string>
+
+    <!--for Settings-->
+    <string name="sort">movie_sort</string>
+    <string name="settings">Settings</string>
+    <string name="refresh_friendly_reminder">No real data updated, implement it later</string>
 
 </resources>
