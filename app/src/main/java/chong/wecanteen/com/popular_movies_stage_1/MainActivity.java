@@ -19,6 +19,7 @@ package chong.wecanteen.com.popular_movies_stage_1;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -31,12 +32,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mSort = Utility.getPreferredSortMovie(this);
+        Log.i(LOG_TAG, "TEST:onCreate() called ");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         int sort  = Utility.getPreferredSortMovie(this);
+        Log.i(LOG_TAG, "TEST:onResume() called ");
         // update this activity title according to sort value
         switch (sort) {
             case Utility.MOVIE_SORT_POPULAR:
@@ -46,17 +49,6 @@ public class MainActivity extends AppCompatActivity {
                 getSupportActionBar().setTitle(R.string.top_movies);
                 break;
         }
-        // when sort value of settings changed, with the help of Fragment Manager restart load, update
-        // to latest UI.
-        if (sort != mSort) {
-            MainFragment mf = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
-            if (null != mf) {
-                mSort = sort;
-                // call this method to restart loader.
-                mf.onMovieSortChanged(sort);
-            }
-        }
-
     }
 
     @Override

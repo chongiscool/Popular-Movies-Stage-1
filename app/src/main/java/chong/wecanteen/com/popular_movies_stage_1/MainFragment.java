@@ -45,7 +45,7 @@ import chong.wecanteen.com.popular_movies_stage_1.dataset.Bean;
 
 /**
  * Created by Chong on 8/5/2016.
- *
+ * <p/>
  * Encapsulates fetching the movie poster and displaying it as a {@link GridView} layout.
  */
 public class MainFragment extends Fragment
@@ -80,12 +80,9 @@ public class MainFragment extends Fragment
         mGridView.setEmptyView(mTextView);
 
         mAdapter = new MainAdapter(getContext(), new ArrayList<Bean>());
-
         mGridView.setAdapter(mAdapter);
-
         mGridView.setOnItemClickListener(this);
 
-        Log.i(LOG_TAG, "TEST:onCreateView() called ");
         return root;
     }
 
@@ -104,7 +101,7 @@ public class MainFragment extends Fragment
             mProgressBar.setVisibility(View.GONE);
             mTextView.setText(R.string.no_internet_connection);
         }
-        Log.i(LOG_TAG, "TEST:onActivityCreated() called ");
+        Log.i(LOG_TAG, "TEST:onActivityCreated() called");
     }
 
     @Override
@@ -119,10 +116,15 @@ public class MainFragment extends Fragment
         mSwipeRefreshLayout.setColorSchemeResources(R.color.blue, R.color.purple, R.color.green, R.color.orange);
     }
 
-    // For supporting Activity associated communicate to this Fragment.
-    void onMovieSortChanged(int sort) {
-        mSort = sort;
-        getActivity().getSupportLoaderManager().restartLoader(MAIN_LOADER, null, this);
+    @Override
+    public void onResume() {
+        super.onResume();
+        int sort = Utility.getPreferredSortMovie(getContext());
+        if (sort != mSort) {
+            mSort = sort;
+            // call this method to restart loader if sort value changed
+            getActivity().getSupportLoaderManager().restartLoader(MAIN_LOADER, null, this);
+        }
     }
 
     @Override
@@ -133,6 +135,7 @@ public class MainFragment extends Fragment
         startActivity(intent);
     }
 
+
     @Override
     public Loader<List<Bean>> onCreateLoader(int id, Bundle args) {
         Log.i(LOG_TAG, "TEST: onCreateLoader() called... ");
@@ -141,14 +144,12 @@ public class MainFragment extends Fragment
 
     @Override
     public void onLoadFinished(Loader<List<Bean>> loader, List<Bean> data) {
-
         mTextView.setText(R.string.no_found_movie);
         mProgressBar.setVisibility(View.GONE);
         mAdapter.clear();
         if (data != null && !data.isEmpty()) {
             mAdapter.addAll(data);
         }
-        Log.i(LOG_TAG, "TEST: onLoadFinished() called... ");
     }
 
     @Override
