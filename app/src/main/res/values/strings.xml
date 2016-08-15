@@ -27,5 +27,8 @@
     <string name="sort">movie_sort</string>
     <string name="settings">Settings</string>
     <string name="refresh_friendly_reminder">No real data updated, implement it later</string>
+    <string name="format_runtime">Duration: %1$d Min</string>
+    <string name="format_rating">Rating: %1$,.1f</string>
+    <string name="format_date">Date: %1$s</string>
 
 </resources>

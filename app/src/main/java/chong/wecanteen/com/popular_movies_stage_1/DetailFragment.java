@@ -54,7 +54,7 @@ public class DetailFragment extends Fragment {
     private static final String EXTRA_VIDEOS_BEAN = "videosBean";
     private static final String EXTRA_COMMENTS_BEAN = "commentsBean";
 
-    // For
+    // For fragment detail
     private TextView tv_movie_title;
     private ImageView iv_movie_poster;
     private TextView tv_movie_runtime;
@@ -139,16 +139,19 @@ public class DetailFragment extends Fragment {
                     commentsBeanList = Utility.fetchCommentsJsonData(id);
 
             args.putParcelable(EXTRA_DETAILS_BEAN, detailsBean);
-            if (videosBeanList == null) {
-                Log.e(LOG_TAG, "doInBackground: videosBeanList is null");
-            } else {
+            // try-catch statement handle IndexOutOfBoundsException if exist
+            try {
                 args.putParcelable(EXTRA_COMMENTS_BEAN, commentsBeanList.get(0));
+            } catch (IndexOutOfBoundsException e) {
+                Log.e(LOG_TAG, "doInBackground: no comments", e);
+                e.printStackTrace();
             }
 
-            if (commentsBeanList == null) {
-                Log.e(LOG_TAG, "doInBackground: commentsBeanList is null");
-            } else {
+            try {
                 args.putParcelable(EXTRA_VIDEOS_BEAN, videosBeanList.get(0));
+            } catch (IndexOutOfBoundsException e) {
+                Log.e(LOG_TAG, "doInBackground: no treailers", e);
+                e.printStackTrace();
             }
 
             return args;
@@ -158,6 +161,7 @@ public class DetailFragment extends Fragment {
         protected void onPostExecute(Bundle bundle) {
             mProgressBar.setVisibility(View.GONE);
             detailsBean = bundle.getParcelable(EXTRA_DETAILS_BEAN);
+
             if (bundle.containsKey(EXTRA_COMMENTS_BEAN)) {
                 commentsBean = bundle.getParcelable(EXTRA_COMMENTS_BEAN);
                 if (commentsBean != null) {
@@ -165,6 +169,7 @@ public class DetailFragment extends Fragment {
                     tv_movie_reviews_comment.setText(commentsBean.getContent());
                 }
             }
+
             if (bundle.containsKey(EXTRA_VIDEOS_BEAN)) {
                 videosBean = bundle.getParcelable(EXTRA_VIDEOS_BEAN);
                 if (videosBean != null) {
@@ -188,9 +193,9 @@ public class DetailFragment extends Fragment {
 
                 String image = detailsBean.getPoster_path();
                 Picasso.with(getContext()).load(Utility.fetchImageURL(image)).into(iv_movie_poster);
-                String format_runtime = String.format(Locale.US, "Duration: %1$d Min", detailsBean.getRuntime());
-                String format_rating = String.format(Locale.US, "Rating: %1$,.1f", detailsBean.getVote_average());
-                String format_date = String.format(Locale.US, "Date: %1$s", detailsBean.getRelease_date());
+                String format_runtime = String.format(Locale.US, getContext().getString(R.string.format_runtime), detailsBean.getRuntime());
+                String format_rating = String.format(Locale.US, getContext().getString(R.string.format_rating), detailsBean.getVote_average());
+                String format_date = String.format(Locale.US, getContext().getString(R.string.format_date), detailsBean.getRelease_date());
                 tv_movie_runtime.setText(format_runtime);
                 tv_movie_rating.setText(format_rating);
                 tv_movie_date.setText(format_date);

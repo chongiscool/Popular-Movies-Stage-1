@@ -44,7 +44,7 @@ import chong.wecanteen.com.popular_movies_stage_1.dataset.VideosBean;
 
 /**
  * Created by Chong on 7/9/2016.
- *
+ * <p/>
  * This is a help class which have many static method and final static constant.
  * In this application, another class can access these method for their:
  * 1. build youtube and movie poster url
@@ -125,6 +125,7 @@ public class Utility {
      * Use {@link URL} open connection, and invoke extractFromStream
      * method, get jsonResponse. This process might be consume more time, especially
      * request for image and video stream, so better place this process to background thread.
+     *
      * @param url From createURL method
      * @return jsonResponse from web server
      * @throws IOException
@@ -197,6 +198,7 @@ public class Utility {
 
     /***
      * Parse jsonString, and store data to List
+     *
      * @param jsonString downloaded after invoked makeHttpResponse method
      * @return {@link List<Bean>}
      */
@@ -226,7 +228,7 @@ public class Utility {
                 beans.add(bean);
             }
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "extractFeatureFromJson: failed",e);
+            Log.e(LOG_TAG, "extractFeatureFromJson: failed", e);
             e.printStackTrace();
         }
         return beans;
@@ -284,23 +286,16 @@ public class Utility {
             return null;
         }
         List<CommentsBean> commentsBeans = new ArrayList<>();
-        CommentsBean commentsBean;
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray jsonArray = jsonObject.getJSONArray("results");
-            if (jsonArray != null && jsonArray.length() > 0) {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject element = jsonArray.getJSONObject(i);
-                    String author = element.getString("author");
-                    String content = element.getString("content");
-                    String url = element.getString("url");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject element = jsonArray.getJSONObject(i);
+                String author = element.getString("author");
+                String content = element.getString("content");
+                String url = element.getString("url");
 
-                    commentsBean = new CommentsBean(author, content, url);
-                    commentsBeans.add(commentsBean);
-                }
-            } else {
-                Log.e(LOG_TAG, "extractCommentFromJson: jsonArray have no element");
-                return null;
+                commentsBeans.add(new CommentsBean(author, content, url));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -321,11 +316,10 @@ public class Utility {
         }
         List<CommentsBean> commentsBeans = extractCommentFromJson(jsonResponse);
         if (commentsBeans == null) {
-            Log.i(LOG_TAG, "TEST:fetchCommentsJsonData() called commentsBean is null" );
+            Log.i(LOG_TAG, "TEST:fetchCommentsJsonData() called commentsBean is null");
         }
         return commentsBeans;
     }
-
 
     // Build trailer request url, so can fetch more trailer videos
     public static String buildRequestVideosURL(int id) {
@@ -357,7 +351,6 @@ public class Utility {
                             element.getString("name"),
                             type
                     );
-                    // add element to this list object
                     videosBeans.add(videosBean);
                 }
             }
