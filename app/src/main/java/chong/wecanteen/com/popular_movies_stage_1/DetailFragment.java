@@ -41,6 +41,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import chong.wecanteen.com.popular_movies_stage_1.dataset.CommentsBean;
 import chong.wecanteen.com.popular_movies_stage_1.dataset.DetailsBean;
 import chong.wecanteen.com.popular_movies_stage_1.dataset.VideosBean;
@@ -55,23 +58,37 @@ public class DetailFragment extends Fragment {
     private static final String EXTRA_COMMENTS_BEAN = "commentsBean";
 
     // For fragment detail
-    private TextView tv_movie_title;
-    private ImageView iv_movie_poster;
-    private TextView tv_movie_runtime;
-    private TextView tv_movie_rating;
-    private TextView tv_movie_date;
-    private Button btn_movie_favorite;
+    @BindView(R.id.movie_title)
+    TextView tv_movie_title;
+    @BindView(R.id.movie_poster)
+    ImageView iv_movie_poster;
+    @BindView(R.id.movie_runtime)
+    TextView tv_movie_runtime;
+    @BindView(R.id.movie_rating)
+    TextView tv_movie_rating;
+    @BindView(R.id.movie_date)
+    TextView tv_movie_date;
+    @BindView(R.id.movie_favorite)
+    Button btn_movie_favorite;
 
     // From content fragment detail
-    private TextView tv_movie_overview;
-    private LinearLayout linear_trailer;
-    private ImageView iv_movie_play_arrow;
-    private TextView tv_movie_trailer;
-    private TextView tv_movie_reviews_user;
-    private TextView tv_movie_reviews_comment;
+    @BindView(R.id.overview)
+    TextView tv_movie_overview;
+    @BindView(R.id.linear_trailer)
+    LinearLayout linear_trailer;
+    @BindView(R.id.play_arrow)
+    ImageView iv_movie_play_arrow;
+    @BindView(R.id.trailer)
+    TextView tv_movie_trailer;
+    @BindView(R.id.reviews_user)
+    TextView tv_movie_reviews_user;
+    @BindView(R.id.reviews_comment)
+    TextView tv_movie_reviews_comment;
 
-    private ProgressBar mProgressBar;
+    @BindView(R.id.detail_progress_bar)
+    ProgressBar mProgressBar;
     private int mId;
+    private Unbinder unbinder;
 
     /**
      * Detail Fragment will use these three data which implemented
@@ -81,27 +98,12 @@ public class DetailFragment extends Fragment {
     public VideosBean videosBean;
     public CommentsBean commentsBean;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_detail, container, false);
-        tv_movie_title = (TextView) root.findViewById(R.id.movie_title);
-        iv_movie_poster = (ImageView) root.findViewById(R.id.movie_poster);
-        tv_movie_runtime = (TextView) root.findViewById(R.id.movie_runtime);
-        tv_movie_rating = (TextView) root.findViewById(R.id.movie_rating);
-        tv_movie_date = (TextView) root.findViewById(R.id.movie_date);
-        btn_movie_favorite = (Button) root.findViewById(R.id.movie_favorite);
+        unbinder = ButterKnife.bind(this, root);
         btn_movie_favorite.setVisibility(View.GONE);
-
-        tv_movie_overview = (TextView) root.findViewById(R.id.overview);
-        linear_trailer = (LinearLayout) root.findViewById(R.id.linear_trailer);
-        iv_movie_play_arrow = (ImageView) root.findViewById(R.id.play_arrow);
-        tv_movie_trailer = (TextView) root.findViewById(R.id.trailer);
-        tv_movie_reviews_user = (TextView) root.findViewById(R.id.reviews_user);
-        tv_movie_reviews_comment = (TextView) root.findViewById(R.id.reviews_comment);
-
-        mProgressBar = (ProgressBar) root.findViewById(R.id.detail_progress_bar);
         return root;
     }
 
@@ -186,13 +188,19 @@ public class DetailFragment extends Fragment {
                     iv_movie_play_arrow.setImageResource(R.drawable.ic_play_arrow_black_48dp);
                     tv_movie_trailer.setText(videosBean.getName());
                 }
+            } else {
+                linear_trailer.setVisibility(View.GONE);
             }
 
             if (detailsBean != null) {
                 tv_movie_title.setText(detailsBean.getTitle());
 
                 String image = detailsBean.getPoster_path();
-                Picasso.with(getContext()).load(Utility.fetchImageURL(image)).into(iv_movie_poster);
+                Picasso.with(getContext()).load(Utility.fetchImageURL(image))
+                        .placeholder(R.mipmap.ic_launcher)
+                        .error(R.mipmap.ic_launcher)
+                        .into(iv_movie_poster);
+
                 String format_runtime = String.format(Locale.US, getContext().getString(R.string.format_runtime), detailsBean.getRuntime());
                 String format_rating = String.format(Locale.US, getContext().getString(R.string.format_rating), detailsBean.getVote_average());
                 String format_date = String.format(Locale.US, getContext().getString(R.string.format_date), detailsBean.getRelease_date());
@@ -208,4 +216,9 @@ public class DetailFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }

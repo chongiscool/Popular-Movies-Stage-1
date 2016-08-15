@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
  * Copyright (C) 2016 The Android Open Source Project
  *
@@ -28,13 +27,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <GridView
-        android:id="@+id/movie_gridview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:verticalSpacing="5dp"
-        android:horizontalSpacing="5dp"
-        android:numColumns="auto_fit" />
+        <GridView
+            android:id="@+id/movie_gridview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:horizontalSpacing="5dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="5dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 

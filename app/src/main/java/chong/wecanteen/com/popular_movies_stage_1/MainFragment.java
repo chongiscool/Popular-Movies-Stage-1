@@ -40,12 +40,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import chong.wecanteen.com.popular_movies_stage_1.adapter.MainAdapter;
 import chong.wecanteen.com.popular_movies_stage_1.dataset.Bean;
 
 /**
  * Created by Chong on 8/5/2016.
- * <p/>
+ * <p>
  * Encapsulates fetching the movie poster and displaying it as a {@link GridView} layout.
  */
 public class MainFragment extends Fragment
@@ -57,25 +60,28 @@ public class MainFragment extends Fragment
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
     public static final String EXTRA_ID = "movie_detail_id";
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private GridView mGridView;
-    private ProgressBar mProgressBar;
-    private TextView mTextView;
+    @BindView(R.id.container)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.movie_gridview)
+    GridView mGridView;
+    @BindView(R.id.textView)
+    TextView mTextView;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
 
     private MainAdapter mAdapter;
     private int mSort;
+    private Unbinder unbinder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
+        unbinder = ButterKnife.bind(this, root);
+
         mSort = Utility.getPreferredSortMovie(getContext());
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mGridView = (GridView) root.findViewById(R.id.movie_gridview);
-        mTextView = (TextView) root.findViewById(R.id.textView);
-        mProgressBar = (ProgressBar) root.findViewById(R.id.progressBar);
         // when GridView didn't display, then show this Textview
         mGridView.setEmptyView(mTextView);
 
@@ -158,4 +164,9 @@ public class MainFragment extends Fragment
         mAdapter.addAll(new ArrayList<Bean>());
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }
