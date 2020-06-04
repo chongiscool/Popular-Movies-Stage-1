@@ -13,36 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package chong.wecanteen.com.popular_movies_stage_1
 
-package chong.wecanteen.com.popular_movies_stage_1;
-
-import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
-
-import chong.wecanteen.com.popular_movies_stage_1.dataset.DetailsBean;
+import android.content.Context
+import androidx.loader.content.AsyncTaskLoader
+import chong.wecanteen.com.popular_movies_stage_1.Utility.fetchDetailJsonData
+import chong.wecanteen.com.popular_movies_stage_1.dataset.DetailsBean
 
 /**
  * Created by Chong on 8/8/2016.
  *
  * TODO: use this loader I am thinking how to use it and whether use it or not
  */
-public class DetailsAsyncTaskLoader extends AsyncTaskLoader<DetailsBean> {
-
-    // this id is specified movie
-    private int mId;
-    public DetailsAsyncTaskLoader(Context context, int id) {
-        super(context);
-        mId = id;
+class DetailsAsyncTaskLoader(context: Context?, // this id is specified movie
+                             private val mId: Int) : AsyncTaskLoader<DetailsBean?>(context!!) {
+    override fun onStartLoading() {
+        forceLoad()
     }
 
-    @Override
-    protected void onStartLoading() {
-        forceLoad();
+    override fun loadInBackground(): DetailsBean? {
+        return fetchDetailJsonData(mId)
     }
 
-    @Override
-    public DetailsBean loadInBackground() {
-
-        return Utility.fetchDetailJsonData(mId);
-    }
 }

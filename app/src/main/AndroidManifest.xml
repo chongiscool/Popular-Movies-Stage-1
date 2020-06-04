@@ -40,12 +40,6 @@
             android:name=".DetailActivity"
             android:label="Movie Details"
             android:parentActivityName=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
             <!-- Parent activity meta-data to support 4.0 and lower... -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -56,22 +50,17 @@
             android:label="Settings"
             android:parentActivityName=".MainActivity"
             android:theme="@style/SettingsTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
             <!--to support android 4.0 and lower-->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
 
-        <!--  <service
+          <service
               android:name=".service.MainIntentService"
               android:exported="false">
 
-          </service>-->
+          </service>
     </application>
 
 </manifest>

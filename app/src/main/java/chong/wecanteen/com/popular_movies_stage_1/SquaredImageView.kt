@@ -13,31 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package chong.wecanteen.com.popular_movies_stage_1
 
-package chong.wecanteen.com.popular_movies_stage_1;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.content.Context
+import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
 
 /**
  * Created by Chong on 8/7/2016.
  *
- * According to {@link com.squareup.picasso.Picasso} sample, creating
+ * According to [com.squareup.picasso.Picasso] sample, creating
  * SquaredImageView.
  */
-public class SquaredImageView extends ImageView {
-    public SquaredImageView(Context context) {
-        super(context);
-    }
+class SquaredImageView : AppCompatImageView {
+    constructor(context: Context?) : super(context) {}
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
 
-    public SquaredImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        setMeasuredDimension(measuredWidth, measuredHeight)
     }
 }
