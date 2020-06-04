@@ -34,6 +34,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import chong.wecanteen.com.popular_movies_stage_1.Utility.getPreferredSortMovie
 import chong.wecanteen.com.popular_movies_stage_1.adapter.MainAdapter
 import chong.wecanteen.com.popular_movies_stage_1.dataset.Bean
+import kotlinx.android.synthetic.main.fragment_main.*
 import java.util.*
 
 /**
@@ -44,31 +45,23 @@ import java.util.*
  */
 class MainFragment : Fragment(), OnRefreshListener, OnItemClickListener, LoaderManager.LoaderCallbacks<List<Bean>?> {
 
-    var mSwipeRefreshLayout: SwipeRefreshLayout? = null
-    var mGridView: GridView? = null
-    var mTextView: TextView? = null
-    var mProgressBar: ProgressBar? = null
-
     private var mAdapter: MainAdapter? = null
     private var mSort = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.fragment_main, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+            = inflater.inflate(R.layout.fragment_main, container, false)
 
-        mSwipeRefreshLayout = root.findViewById(R.id.container)
-        mGridView = root.findViewById(R.id.movie_gridview)
-        mTextView = root.findViewById(R.id.textView)
-        mProgressBar = root.findViewById(R.id.progressBar)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         mSort = getPreferredSortMovie(context!!)
-        mSwipeRefreshLayout!!.setOnRefreshListener(this)
+        mainSwipeRefresh!!.setOnRefreshListener(this)
 
         // when GridView didn't display, then show this Textview
-        mGridView!!.emptyView = mTextView
+        mainGridview.emptyView = mainTextView
         mAdapter = MainAdapter(context!!, ArrayList())
-        mGridView!!.adapter = mAdapter
-        mGridView!!.onItemClickListener = this
-        return root
+        mainGridview.adapter = mAdapter
+        mainGridview.onItemClickListener = this
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -82,16 +75,18 @@ class MainFragment : Fragment(), OnRefreshListener, OnItemClickListener, LoaderM
             activity!!.supportLoaderManager.initLoader(MAIN_LOADER, null, this)
         } else {
             // No Internet access
-            mProgressBar!!.visibility = View.GONE
-            mTextView!!.setText(R.string.no_internet_connection)
+            mainProgressbar.visibility = View.GONE
+            mainTextView.setText(R.string.no_internet_connection)
         }
         Log.i(LOG_TAG, "TEST:onActivityCreated() called")
     }
 
     override fun onRefresh() {
         Toast.makeText(context, R.string.refresh_friendly_reminder, Toast.LENGTH_SHORT).show()
-        Handler().postDelayed({ mSwipeRefreshLayout!!.isRefreshing = false }, 2000)
-        mSwipeRefreshLayout!!.setColorSchemeResources(R.color.blue, R.color.purple, R.color.green, R.color.orange)
+
+        mainTextView.postDelayed({ mainSwipeRefresh.isRefreshing = false }, 2000L)
+
+        mainSwipeRefresh.setColorSchemeResources(R.color.blue, R.color.purple, R.color.green, R.color.orange)
     }
 
     override fun onResume() {
@@ -117,10 +112,10 @@ class MainFragment : Fragment(), OnRefreshListener, OnItemClickListener, LoaderM
     }
 
     override fun onLoadFinished(loader: Loader<List<Bean>?>, data: List<Bean>?) {
-        mTextView!!.setText(R.string.no_found_movie)
-        mProgressBar!!.visibility = View.GONE
+        mainTextView!!.setText(R.string.no_found_movie)
+        mainProgressbar!!.visibility = View.GONE
         mAdapter!!.clear()
-        if (data != null && !data.isEmpty()) {
+        if (data != null && data.isNotEmpty()) {
             mAdapter!!.addAll(data)
         }
     }
@@ -128,10 +123,6 @@ class MainFragment : Fragment(), OnRefreshListener, OnItemClickListener, LoaderM
     override fun onLoaderReset(loader: Loader<List<Bean>?>) {
         Log.i(LOG_TAG, "TEST: onLoaderReset() called... ")
         mAdapter!!.addAll(ArrayList())
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
     }
 
     companion object {

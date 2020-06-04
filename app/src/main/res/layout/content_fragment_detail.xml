@@ -22,7 +22,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/overview"
+        android:id="@+id/detailOverview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -30,21 +30,21 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <LinearLayout
-        android:id="@+id/linear_trailer"
+        android:id="@+id/detailLinearTrailer"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_below="@id/overview"
+        android:layout_below="@id/detailOverview"
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/play_arrow"
+            android:id="@+id/detailPlayArrow"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:contentDescription="@string/play_arrow_description"
             android:foregroundGravity="center" />
 
         <TextView
-            android:id="@+id/trailer"
+            android:id="@+id/detailTrailer"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginLeft="@dimen/trailer_margin_left"
@@ -53,17 +53,17 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/reviews_user"
+        android:id="@+id/detailReviewsUser"
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/linear_trailer" />
+        android:layout_below="@id/detailLinearTrailer" />
 
     <TextView
-        android:id="@+id/reviews_comment"
+        android:id="@+id/detailReviewsComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/reviews_user"
+        android:layout_below="@id/detailReviewsUser"
         android:ellipsize="end"
         android:maxLines="2" />
 

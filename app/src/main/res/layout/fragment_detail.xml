@@ -28,7 +28,7 @@
         tools:context=".DetailActivity">
 
         <TextView
-            android:id="@+id/movie_title"
+            android:id="@+id/detailMovieTitle"
             style="@style/TextAppearance.AppCompat.Large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,13 +38,13 @@
             android:id="@+id/linear_container1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/movie_title"
+            android:layout_below="@+id/detailMovieTitle"
             android:orientation="horizontal"
             android:paddingBottom="10dp"
             android:paddingTop="10dp">
 
             <ImageView
-                android:id="@+id/movie_poster"
+                android:id="@+id/detailMoviePoster"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                  />
@@ -56,27 +56,27 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/movie_runtime"
+                    android:id="@+id/detailMovieRuntime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/movie_rating"
+                    android:id="@+id/detailMovieRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/movie_runtime"/>
+                    android:layout_below="@+id/detailMovieRuntime"/>
 
                 <TextView
-                    android:id="@+id/movie_date"
+                    android:id="@+id/detailMovieDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/movie_rating"/>
+                    android:layout_below="@+id/detailMovieRating"/>
 
                 <Button
-                    android:id="@+id/movie_favorite"
+                    android:id="@+id/detailMovieFavorite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/movie_date" />
+                    android:layout_below="@+id/detailMovieDate" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -87,7 +87,7 @@
             android:layout_below="@+id/linear_container1" />
 
         <ProgressBar
-            android:id="@+id/detail_progress_bar"
+            android:id="@+id/detailProgressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
